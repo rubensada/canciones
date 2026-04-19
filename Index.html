@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TÍTULOS — Rubén Sada</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:    #7a0000;
+      --text:  #ffffff;
+      --hover: #ffdd00;
+      --rule:  #a02020;
+      --dim:   #e8b0b0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .container { width: 100%; max-width: 680px; }
+
+    /* ── Cabecera ── */
+    header { text-align: center; margin-bottom: 2rem; }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 0.7rem;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .header-rule { display: flex; align-items: center; gap: 0.8rem; justify-content: center; }
+    .header-rule::before, .header-rule::after {
+      content: ''; flex: 1; max-width: 120px;
+      height: 1px; background: rgba(255,255,255,0.3);
+    }
+    .ornament { color: var(--dim); font-size: 1rem; }
+
+    /* ── Buscador ── */
+    .search-wrap {
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    #buscador {
+      width: 100%;
+      max-width: 420px;
+      padding: 0.45rem 1rem;
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--text);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    #buscador::placeholder { color: rgba(255,255,255,0.45); font-style: italic; }
+    #buscador:focus { border-color: var(--hover); background: rgba(255,255,255,0.18); }
+
+    .search-count {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--dim);
+      font-style: italic;
+      margin-bottom: 0.6rem;
+      min-height: 1.1rem;
+    }
+
+    /* ── Lista ── */
+    #song-list { list-style: none; border-top: 1px solid var(--rule); }
+
+    #song-list li {
+      border-bottom: 1px solid var(--rule);
+      opacity: 0;
+      transform: translateY(6px);
+      animation: fadeUp 0.35s forwards;
+    }
+
+    #song-list li.hidden { display: none; }
+
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    #song-list a {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.25rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1.05rem;
+      font-family: 'EB Garamond', serif;
+      font-weight: 400;
+      transition: color 0.15s, padding-left 0.15s;
+      gap: 0.8rem;
+    }
+
+    #song-list a:hover { color: var(--hover); font-weight: 700; padding-left: 0.5rem; }
+
+    #song-list a .num {
+      font-size: 0.7rem; color: var(--dim);
+      font-style: italic; flex-shrink: 0; min-width: 1.6rem;
+    }
+
+    #song-list a .arrow {
+      font-size: 0.8rem; color: var(--dim);
+      opacity: 0; transition: opacity 0.15s, transform 0.15s;
+      flex-shrink: 0; margin-left: auto;
+    }
+
+    #song-list a:hover .arrow { opacity: 1; color: var(--hover); transform: translateX(4px); }
+
+    /* ── Highlight de búsqueda ── */
+    mark {
+      background: var(--hover);
+      color: #000;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+
+    /* ── Estados ── */
+    .status { text-align: center; padding: 2.5rem 0; color: var(--dim); font-style: italic; }
+    .error  { color: #ffaaaa; font-style: italic; text-align: center; padding: 2rem 0; font-size: 0.95rem; }
+
+    footer {
+      margin-top: 2rem; text-align: center;
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      color: var(--rule); text-transform: uppercase;
+    }
+
+    #song-list li:nth-child(1)    { animation-delay: 0.03s }
+    #song-list li:nth-child(2)    { animation-delay: 0.06s }
+    #song-list li:nth-child(3)    { animation-delay: 0.09s }
+    #song-list li:nth-child(4)    { animation-delay: 0.12s }
+    #song-list li:nth-child(5)    { animation-delay: 0.15s }
+    #song-list li:nth-child(6)    { animation-delay: 0.18s }
+    #song-list li:nth-child(7)    { animation-delay: 0.21s }
+    #song-list li:nth-child(8)    { animation-delay: 0.24s }
+    #song-list li:nth-child(9)    { animation-delay: 0.27s }
+    #song-list li:nth-child(10)   { animation-delay: 0.30s }
+    #song-list li:nth-child(n+11) { animation-delay: 0.33s }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <p class="eyebrow">Labradores de Poesía</p>
+      <h1>Rubén Sada</h1>
+      <p class="subtitle">Índice de títulos publicados</p>
+      <div class="header-rule"><span class="ornament">✦</span></div>
+    </header>
+
+    <div class="search-wrap">
+      <input type="text" id="buscador" placeholder="Buscar título…" autocomplete="off" />
+    </div>
+    <p class="search-count" id="search-count"></p>
+
+    <ul id="song-list">
+      <li><div class="status">Cargando títulos…</div></li>
+    </ul>
+
+    <footer>actualizado automáticamente desde Google Sheets</footer>
+  </div>
+
+  <script>
+    var SHEET_ID = '1inf9vlidPjDqIoRN5omrPUb1WsPRMFcbI_iN_rmr1us';
+    var CSV_URL  = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=TEMAS%20POR%20ORDEN%20ALFAB%C3%89TICO';
+
+    var allSongs = []; // guardamos todos los datos para el filtro
+
+    async function loadSongs() {
+      var list = document.getElementById('song-list');
+      try {
+        var res = await fetch(CSV_URL);
+        if (!res.ok) throw new Error('No se pudo cargar la hoja. (HTTP ' + res.status + ')');
+        var text = await res.text();
+        var rows = parseCSV(text);
+
+        if (rows.length < 2) {
+          list.innerHTML = '<li><div class="error">La hoja parece estar vacía.</div></li>';
+          return;
+        }
+
+        allSongs = rows.slice(1).filter(function(r) {
+          return r[0] && r[0].trim() !== '' && r[3] && r[3].trim() !== '';
+        });
+
+        if (allSongs.length === 0) {
+          list.innerHTML = '<li><div class="status">No se encontraron temas.</div></li>';
+          return;
+        }
+
+        renderSongs('');
+        document.getElementById('buscador').addEventListener('input', function() {
+          renderSongs(this.value);
+        });
+
+      } catch (err) {
+        list.innerHTML = '<li><div class="error">Error al cargar los datos.<br><small>' + err.message + '</small></div></li>';
+        console.error('Error:', err);
+      }
+    }
+
+    function renderSongs(query) {
+      var list  = document.getElementById('song-list');
+      var count = document.getElementById('search-count');
+      var q = query.trim().toLowerCase();
+
+      var filtered = allSongs.filter(function(row) {
+        return row[0].toLowerCase().indexOf(q) !== -1;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<li><div class="status">No se encontraron resultados para <em>"' + escapeHtml(query) + '"</em>.</div></li>';
+        count.textContent = '';
+        return;
+      }
+
+      count.textContent = q
+        ? filtered.length + ' resultado' + (filtered.length !== 1 ? 's' : '') + ' para "' + query + '"'
+        : filtered.length + ' TÍTULOS ENCONTRADOS';
+
+      list.innerHTML = filtered.map(function(row, i) {
+        var title = row[0].trim();
+        var link  = row[3].trim();
+        var displayTitle = q ? highlight(escapeHtml(title), q) : escapeHtml(title);
+        return '<li><a href="' + escapeHtml(link) + '" target="_blank" rel="noopener">' +
+          '<span class="num">' + String(i + 1).padStart(2, '0') + '</span>' +
+          '<span style="flex:1">' + displayTitle + '</span>' +
+          '<span class="arrow">&#8594;</span>' +
+          '</a></li>';
+      }).join('');
+    }
+
+    // Resalta la palabra buscada dentro del texto
+    function highlight(text, query) {
+      var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return text.replace(new RegExp('(' + escaped + ')', 'gi'), '<mark>$1</mark>');
+    }
+
+    function parseCSV(text) {
+      var rows = [];
+      var row = [], field = '', inQuote = false;
+      for (var i = 0; i < text.length; i++) {
+        var c = text[i];
+        if (inQuote) {
+          if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+          else if (c === '"') { inQuote = false; }
+          else { field += c; }
+        } else {
+          if (c === '"') { inQuote = true; }
+          else if (c === ',') { row.push(field); field = ''; }
+          else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+          else if (c !== '\r') { field += c; }
+        }
+      }
+      if (field !== '' || row.length > 0) { row.push(field); rows.push(row); }
+      return rows;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    loadSongs();
+  </script>
+</body>
+</html>
